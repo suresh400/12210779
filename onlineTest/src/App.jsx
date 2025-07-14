@@ -52,7 +52,7 @@ const App = () => {
 
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">Client-Side URL Shortener</h1>
+      <h1 className="text-2xl font-bold mb-4">URL Shortener</h1>
       <UrlShortenerForm onShorten={handleShorten} />
       <UrlShortenerResult results={results} onClickTrack={handleClick} />
       <UrlShortenerStatistics stats={statistics} />
