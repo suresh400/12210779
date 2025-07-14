@@ -1,0 +1,58 @@
+form {
+  max-width: 800px;
+  margin: auto;
+  background: #ffffff;
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+input[type="text"],
+input[type="number"] {
+  padding: 0.75rem;
+  border: 2px solid #ddd;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  transition: border-color 0.2s ease;
+  width: 100%;
+}
+
+input:focus {
+  border-color: #4f46e5;
+  outline: none;
+}
+
+button {
+  padding: 0.75rem 1.5rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+button[type="button"] {
+  background-color: #3b82f6;
+  color: white;
+  margin-right: 1rem;
+}
+
+button[type="button"]:hover {
+  background-color: #2563eb;
+}
+
+button[type="submit"] {
+  background-color: #22c55e;
+  color: white;
+}
+
+button[type="submit"]:hover {
+  background-color: #16a34a;
+}
