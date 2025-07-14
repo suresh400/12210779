@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import UrlShortenerForm from './components/UrlShortenerForm';
 import UrlShortenerResult from './components/UrlShortenerResult';
 import UrlShortenerStatistics from './components/UrlShortenerStatistics';
+import { registerClient, authenticateClient, sendLog } from './utils/logMiddlewareApi';
 
 const LOCAL_STORAGE_KEY = 'shortenerData';
 
@@ -10,6 +11,22 @@ const App = () => {
   const [statistics, setStatistics] = useState([]);
 
   useEffect(() => {
+    const setupLogging = async () => {
+      try {
+        await registerClient();
+        await authenticateClient();
+        await sendLog({
+          stack: 'frontend',
+          level: 'info',
+          message: 'User loaded the app successfully',
+        });
+      } catch (err) {
+        console.error('Logging setup failed', err);
+      }
+    };
+
+    setupLogging();
+
     const data = localStorage.getItem(LOCAL_STORAGE_KEY);
     if (data) {
       const parsed = JSON.parse(data);
@@ -22,15 +39,26 @@ const App = () => {
     localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(data));
   };
 
-  const handleShorten = (data) => {
+  const handleShorten = async (data) => {
     const updated = [...results, ...data];
     setResults(updated);
     setStatistics(updated);
     persistData(updated);
+
+    for (const item of data) {
+      await sendLog({
+        stack: 'frontend',
+        level: 'info',
+        message: `Shortened URL: ${item.originalUrl} → ${item.shortcode}`,
+      });
+    }
   };
 
   const handleClick = async (shortcode) => {
-    const geo = await fetch('https://ipapi.co/json').then(res => res.json()).catch(() => null);
+    const geo = await fetch('https://ipapi.co/json')
+      .then(res => res.json())
+      .catch(() => null);
+
     const updatedStats = statistics.map((url) => {
       if (url.shortcode === shortcode) {
         const newClick = {
@@ -45,9 +73,16 @@ const App = () => {
       }
       return url;
     });
+
     setStatistics(updatedStats);
     setResults(updatedStats);
     persistData(updatedStats);
+
+    await sendLog({
+      stack: 'frontend',
+      level: 'info',
+      message: `Short URL clicked: ${shortcode}`,
+    });
   };
 
   return (
